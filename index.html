@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robomates | Activities</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to Robomates Activities</h1>
+    <div class="activities">
+        <div class="available">
+            <h2>Available Activities</h2>
+            <ul>
+                <li>Arduino</li>
+                <p class="desc">This class includes an Arduino which allows students to learn basic electronics and programming concepts.</p>
+                <button id="arduino-join">Join Activity</button>
+            </ul>
+        </div>
+        <div class="unavailable">
+            <h2>Unavailable Activities</h2>
+            <ul>
+                <li>Robotics</li>
+                <p class="desc">This class focuses on building and programming robots using various kits and components.</p>
+                <button disabled>Join Activity</button>
+            </ul>
+            <ul>
+                <li>Animatronics</li>
+                <p class="desc">This class teaches students how to create lifelike movements in robots using animatronics techniques.</p>
+                <button disabled>Join Activity</button>
+            </ul>
+        </div>
+    </div>
+
+    <div class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="errors" style="display: none;">
+        <h2 class="error-join" display="none">placeholder</h2>
+    </div>
+    
+    <div class="success" style="display: none;">
+        <h2 class="success-join" style="display: none;">placeholder</h2>
+    </div>
+
+    <script src="script.js"></script>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Robomates Club. Built for creators and innovators. 
+                <a href="/privacy">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+    
+</body>
+</html>

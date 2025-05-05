@@ -37,71 +37,77 @@
   </main>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    sendEmailVerification
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCp6d8X1_K5Ee72oTJ_KyiuamgJNGH-HL4",
-      authDomain: "verify-email-291be.firebaseapp.com",
-      projectId: "verify-email-291be",
-      storageBucket: "verify-email-291be.firebasestorage.app",
-      messagingSenderId: "183178168927",
-      appId: "1:183178168927:web:4f09660b5088ae6fd369ea",
-      measurementId: "G-ZPVBBDYQ02"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyCp6d8X1_K5Ee72oTJ_KyiuamgJNGH-HL4",
+    authDomain: "verify-email-291be.firebaseapp.com",
+    projectId: "verify-email-291be",
+    storageBucket: "verify-email-291be.firebasestorage.app",
+    messagingSenderId: "183178168927",
+    appId: "1:183178168927:web:4f09660b5088ae6fd369ea",
+    measurementId: "G-ZPVBBDYQ02"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    const form = document.getElementById("registerForm");
-    const emailInput = document.getElementById("email");
-    const nameInput = document.getElementById("name");
-    const passwordInput = document.getElementById("password");
-    const submitButton = document.getElementById("submit");
+  const form = document.getElementById("registerForm");
+  const emailInput = document.getElementById("email");
+  const nameInput = document.getElementById("name");
+  const passwordInput = document.getElementById("password");
+  const submitButton = document.getElementById("submit");
+
+  // Run on page load
+  document.addEventListener("DOMContentLoaded", () => {
     const inArduino = localStorage.getItem("in-arduino");
-
-    function checkClass() {
-      if (inArduino == "true") {
-        window.location.href = "https://robomates.github.io/activities";
-        localStorage.setItem("joinMsg", "1");
-      }
+    if (inArduino === "true") {
+      localStorage.setItem("joinMsg", "1");
+      window.location.href = "https://robomates.github.io/activities";
     }
 
-    function toggleButtonState() {
+    // Input validation listener
+    const toggleButtonState = () => {
       const isEmailFilled = emailInput.value.trim() !== "";
       const isNameFilled = nameInput.value.trim() !== "";
       const isPasswordFilled = passwordInput.value.trim() !== "";
       submitButton.disabled = !(isEmailFilled && isNameFilled && isPasswordFilled);
-    }
+    };
 
-    window.onload = checkClass;
     emailInput.addEventListener("input", toggleButtonState);
     nameInput.addEventListener("input", toggleButtonState);
     passwordInput.addEventListener("input", toggleButtonState);
 
-    function showPopup(message, isError = false) {
+    // Feedback popup
+    const showPopup = (message, isError = false) => {
       const popup = document.createElement("div");
       popup.className = "popup" + (isError ? " error" : "");
       popup.textContent = message;
       document.querySelector(".form-container").appendChild(popup);
       setTimeout(() => popup.remove(), 3000);
-    }
+    };
 
+    // Form submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const email = emailInput.value.trim();
-      const name = nameInput.CLvalue.trim();
+      const name = nameInput.value.trim();
       const password = passwordInput.value.trim();
+      const emailDomain = email.split("@")[1] || "";
       const disposableDomains = ["magneticoak.com", "hthlm.com", "poplk.com", "ytnhy.com", "jioso.com", "toaik.com"];
-      const emailDomain = email.split("@")[1];
 
       if (/\d/.test(name)) {
         showPopup("Names shouldn't contain numbers.", true);
         return;
       }
 
-      if (disposableDomains.includes(emailDomain)) {
+      if (disposableDomains.includes(emailDomain.toLowerCase())) {
         showPopup("Disposable emails are not allowed.", true);
         return;
       }
@@ -114,6 +120,7 @@
         localStorage.setItem("signedIn", "true");
         localStorage.setItem("accset", "false");
         localStorage.setItem("in-arduino", "true");
+
         showPopup("Signed up successfully!");
         form.reset();
         submitButton.disabled = true;
@@ -126,6 +133,8 @@
         showPopup("Error: " + error.message, true);
       }
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>

@@ -3,11 +3,18 @@ const loading = document.querySelector(".loading")
 const errorsdiv = document.querySelector(".errors")
 const errorJoining = document.querySelector(".error-join")
 const joinMesssage = localStorage.getItem("joinMsg");
+const login =  document.getElementById("login")
 
 if (!join1) console.error("Javascript failed!");
 
 function showLoading() {
     loading.style.display = "block";
+}
+
+function checkAccount() {
+    if (localStorage.getItem("signedIn") == "true") {
+        login.remove()
+    }
 }
 
 function onloadLoading() {
@@ -25,6 +32,7 @@ function hideError(object) {
         object.style.opacity = "1";
     }, 500);
 }
+
 
 function showError(object, text) {
     if (!object) return console.error("Error object not found!");
@@ -82,6 +90,7 @@ join1.addEventListener("click", function() {
 
 window.onload = function() {
     onloadLoading();
+    checkAccount();
     setTimeout(() => {
         loadErrors();
     }, 1000);

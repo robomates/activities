@@ -7,25 +7,41 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Arduino Class Registration</h1>
-    <form id="registerForm">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" name="name" placeholder="Enter your full name" required />
 
-      <label for="email">Email Address</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required />
+  <nav class="navbar">
+    <ul class="nav-links">
+      <li><a href="/home">Home</a></li>
+      <li><a href="/about">About Us</a></li>
+      <li><a href="/activities">Activities</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/calendar">Calendar</a></li>
+      <li><a href="/login">Login</a></li>
+    </ul>
+  </nav>
 
+  <main class="center-content">
+    <div class="container form-container">
+      <h1>Arduino Class Registration</h1>
+      <form id="registerForm">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required />
 
-      <label for="email">Password</label>
-      <button type="submit" id="submit" disabled>Join this class</button>
-    </form>
-  </div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+
+        <button type="submit" id="submit" disabled>Join this class</button>
+      </form>
+    </div>
+  </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  
     const firebaseConfig = {
       apiKey: "AIzaSyCp6d8X1_K5Ee72oTJ_KyiuamgJNGH-HL4",
       authDomain: "verify-email-291be.firebaseapp.com",
@@ -35,87 +51,84 @@
       appId: "1:183178168927:web:4f09660b5088ae6fd369ea",
       measurementId: "G-ZPVBBDYQ02"
     };
-
+  
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-
+    const db = getFirestore(app);
+  
     const form = document.getElementById("registerForm");
     const emailInput = document.getElementById("email");
     const nameInput = document.getElementById("name");
+    const passwordInput = document.getElementById("password");
     const submitButton = document.getElementById("submit");
     const inArduino = localStorage.getItem("in-arduino");
-
-    const passwordInput = document.createElement("input");
-    passwordInput.type = "password";
-    passwordInput.placeholder = "Enter your password";
-    passwordInput.required = true;
-    passwordInput.style.marginTop = "10px";
-    passwordInput.id = "password";
-    passwordInput.name = "password";
-    passwordInput.style.padding = "10px";
-    passwordInput.style.borderRadius = "5px";
-    passwordInput.style.border = "1px solid #ccc";
-    passwordInput.style.fontSize = "16px";
-    form.insertBefore(passwordInput, submitButton);
-
+  
     function checkClass() {
-        if (inArduino == "true") {
-            window.location.href = "https://robomates.github.io/activities"
-            localStorage.setItem("joinMsg", "1")
-        }
+      if (inArduino === "true") {
+        window.location.href = "https://robomates.github.io/activities";
+        localStorage.setItem("joinMsg", "1");
+      }
     }
-
+  
     function toggleButtonState() {
       const isEmailFilled = emailInput.value.trim() !== "";
       const isNameFilled = nameInput.value.trim() !== "";
       const isPasswordFilled = passwordInput.value.trim() !== "";
       submitButton.disabled = !(isEmailFilled && isNameFilled && isPasswordFilled);
     }
-
-    
-    window.onload = checkClass();
+  
+    window.onload = checkClass;
     emailInput.addEventListener("input", toggleButtonState);
     nameInput.addEventListener("input", toggleButtonState);
     passwordInput.addEventListener("input", toggleButtonState);
-
+  
     function showPopup(message, isError = false) {
       const popup = document.createElement("div");
       popup.className = "popup" + (isError ? " error" : "");
       popup.textContent = message;
-      document.querySelector(".container").appendChild(popup);
+      document.querySelector(".form-container").appendChild(popup);
       setTimeout(() => popup.remove(), 3000);
     }
-
+  
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
+  
       const email = emailInput.value.trim();
       const name = nameInput.value.trim();
       const password = passwordInput.value.trim();
       const disposableDomains = ["magneticoak.com", "hthlm.com", "poplk.com", "ytnhy.com", "jioso.com", "toaik.com"];
       const emailDomain = email.split("@")[1];
-
+  
       if (/\d/.test(name)) {
         showPopup("Names shouldn't contain numbers.", true);
         return;
       }
-
+  
       if (disposableDomains.includes(emailDomain)) {
         showPopup("Disposable emails are not allowed.", true);
         return;
       }
-
+  
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
+  
         await sendEmailVerification(user);
+  
+        await setDoc(doc(db, "arduinoRegistrations", user.uid), {
+          uid: user.uid,
+          email: email,
+          name: name,
+          joinedAt: new Date().toISOString()
+        });
+  
         localStorage.setItem("signedIn", "true");
         localStorage.setItem("accset", "false");
+        localStorage.setItem("in-arduino", "true");
         showPopup("Signed up successfully!");
         form.reset();
         submitButton.disabled = true;
-
+  
         setTimeout(() => {
           window.location.href = "https://robomates.github.io";
         }, 1500);

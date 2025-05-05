@@ -1,9 +1,8 @@
 const join1 = document.getElementById("arduino-join")
 const loading = document.querySelector(".loading")
 const errorsdiv = document.querySelector(".errors")
-const successdiv = document.querySelector(".success")
-const successJoining = document.querySelector(".success-join")
 const errorJoining = document.querySelector(".error-join")
+const joinMesssage = localStorage.getItem("joinMsg");
 
 if (!join1) console.error("Javascript failed!");
 
@@ -14,18 +13,6 @@ function showLoading() {
 function onloadLoading() {
     loading.style.display = "block";
     setTimeout(hideLoading, 1000);
-}
-
-function hideSuccess(object) {
-    if (!object) return console.error("Error object not found!");
-    object.style.transition = "opacity 0.5s ease";
-    object.style.opacity = "0";
-    setTimeout(() => {
-        object.style.display = "none";
-        successdiv.style.display = Array.from(successdiv.children).some(child => child.style.display !== "none") ? "block" : "none";
-        object.style.opacity = "1";
-        hideLoading();
-    }, 500);
 }
 
 function hideError(object) {
@@ -39,13 +26,6 @@ function hideError(object) {
     }, 500);
 }
 
-function showSuccess(object, text) {
-    if (!object) return console.error("Error object not found!");
-    successdiv.style.display = "block";
-    object.style.display = "block";
-    object.textContent = text;
-}
-
 function showError(object, text) {
     if (!object) return console.error("Error object not found!");
     errorsdiv.style.display = "block";
@@ -55,14 +35,15 @@ function showError(object, text) {
 function errorTP(type, activity) {
     if (type === "join") {
         showError(errorJoining, `You are already in the activity: ${activity}.`)
-        setTimeout(() => hideError(errorJoining), 3000)
+        setTimeout(() => hideError(errorJoining), 2000)
     }
 }
 
-function successTP(type, activity) {
-    if (type === "join") {
-        showSuccess(successJoining, `Successfully joined the activity: ${activity}.`)
-        setTimeout(() => hideSuccess(successJoining), 3000)
+function loadErrors() {
+    if (joinMesssage == "1") {
+        localStorage.setItem("joinMsg", "0")
+        showError(errorJoining, `You are already in the activity: Arduino.`)
+        setTimeout(() => hideError(errorJoining), 2000)
     }
 }
 
@@ -99,4 +80,9 @@ join1.addEventListener("click", function() {
     joinActivity(1);
 });
 
-window.onload = onloadLoading;
+window.onload = function() {
+    onloadLoading();
+    setTimeout(() => {
+        loadErrors();
+    }, 1000);
+};

@@ -111,7 +111,7 @@
 
         await sendEmailVerification(user);
         localStorage.setItem("signedIn", "true");
-        localStorage.setItem("accset", "false");
+        localStorage.setItem("accset", "from-regis");
         localStorage.setItem("in-arduino", "true");
         showPopup("Signed up successfully!");
         form.reset();

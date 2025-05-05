@@ -10,11 +10,6 @@ function showLoading() {
     loading.style.display = "block";
 }
 
-function checkAuth() {  
-    if (localStorage.getItem("accset") == "false") {
-        window.location.href = "https://robomates.github.io/verify-acc";
-    }
-}
 function onloadLoading() {
     loading.style.display = "block";
     setTimeout(hideLoading, 1000);
@@ -88,6 +83,5 @@ window.onload = function() {
     onloadLoading();
     setTimeout(() => {
         loadErrors();
-        checkAuth()
     }, 1000);
 };

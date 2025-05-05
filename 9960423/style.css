@@ -9,7 +9,6 @@ body {
   min-height: 100vh;
 }
 
-/* Navbar */
 .navbar {
   background-color: #004d99;
   width: 100%;
@@ -20,20 +19,6 @@ body {
   z-index: 1000;
 }
 
-.navbar .nav-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navbar h1 {
-  font-size: 2em;
-  color: #fff;
-  margin: 0;
-}
 
 .navbar ul {
   list-style: none;

@@ -85,8 +85,7 @@ function joinActivity(id) {
     }
 
     if (activity == "arduino-join") {
-        successTP("join", "Arduino")
-        localStorage.setItem("in-arduino", "true")
+        window.location.href = "https://robomates.github.io/activities/9960423"
         return;
     }
     
